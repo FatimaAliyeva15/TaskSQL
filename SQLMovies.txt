@@ -1,0 +1,76 @@
+
+create database TaskMovie
+
+use TaskMovie
+
+create table ReleaseDate
+(
+Id int primary key identity,
+[Year] int not null
+)
+
+create table Movies 
+(
+Id int primary key identity,
+[Name] nvarchar(60) not null,
+DateId int references ReleaseDate(Id)
+)
+
+create table Genres
+(
+Id int primary key identity,
+Genre nvarchar(60) not null,
+)
+
+create table GenresMovies
+(
+Id int primary key identity,
+MovieId int references Movies(Id),
+GenreId int references Genres(Id)
+)
+
+create table Actors 
+(
+Id int primary key identity,
+[Name] nvarchar(60) not null
+)
+
+create table MoviesActors
+(
+Id int primary key identity,
+MovieId int references Movies(Id),
+ActorId int references Actors(Id)
+)
+
+insert into ReleaseDate values (2023),(2018),(2024),(2021)
+
+
+
+
+insert into Genres values ('Horror'), ('Adventure'), ('Drama'), ('Science Fiction'), ('Comedy'), ('Fantastic'), ('Action'), ('Crime')
+
+
+insert into Movies values ('Rebel Moon — Part One: A Child of Fire', 1), ('Bird Box', 2), ('Death Whisperer',1),('Dune: Desert Planet',4), ('Rebel Moon — Part Two: The Scargiver',3), ('A Night with the Devil',3), ('Dune: Desert Planet Part Two',3)
+
+insert into Actors values ('Dave Bautista'), ('Rebecca Ferguson'), ('Timothée Chalamet'), ('Ed Skrein'),('Djimon Hounsou'),('Sofia Boutella'),('Sandra Bullock'),(' Trevante Rhodes'), ('Nadech Kugimiya'),('Ingrid Torelli')
+
+insert into GenresMovies(MovieId, GenreId) values (1,2),(1,7),(1,3),(2,4),(2,1),(2,3),(3,1),(4,1),(4,2),(4,4),(5,2),(5,7),(6,1),(7,2),(7,1)
+
+insert into MoviesActors(MovieId, ActorId) values (1,4),(1,5),(1,6),(2,7),(2,8),(3,9),(4,1),(4,2),(4,3),(5,4),(5,5),(5,6),(6,10),(7,1),(7,2),(7,3)
+
+select Movies.Id, Movies.[Name] , ReleaseDate.[Year] from Movies 
+inner join ReleaseDate
+on Movies.DateId = ReleaseDate.Id
+
+
+select Movies.Id, Movies.[Name] as MovieName, Genres.Genre as MovieGenre from Movies 
+inner join GenresMovies 
+on Movies.Id = GenresMovies.MovieId
+inner join Genres on GenresMovies.GenreId = Genres.Id
+
+
+
+select Movies.Id, Movies.[Name] as MovieName, Actors.[Name] as MovieActor from Movies 
+inner join MoviesActors 
+on Movies.Id = MoviesActors.MovieId
+inner join Actors on MoviesActors.ActorId = Actors.Id
